@@ -18,8 +18,8 @@ public class PgConexion implements iconexionbd{
             Class.forName("org.postgresql.Driver");
             this.conexion = DriverManager.getConnection(
                     DBConfig.get("postgres.url"),
-                    DBConfig.get("postgres.user"),
-                    DBConfig.get("postgres.password")
+                    DBConfig.getUser(),
+                    DBConfig.getPasword()
             );
         } catch (Exception e) {
             e.printStackTrace();
