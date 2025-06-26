@@ -1,85 +1,87 @@
+CREATE DATABASE sistema_reservas_hotel;
 
+USE sistema_reservas_hotel;
 
--- USUARIOS (autenticación)
+CREATE TABLE cliente (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100),
+    documento VARCHAR(20) UNIQUE NOT NULL,
+    correo VARCHAR(100),
+    telefono VARCHAR(20)
+);
+
 CREATE TABLE usuario (
-    id_usuario SERIAL PRIMARY KEY,
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100),
+    usuario varchar(100),
     correo VARCHAR(100) UNIQUE,
     contrasena VARCHAR(255),
-    rol VARCHAR(20) CHECK (rol IN ('Recepcionista', 'Administrador'))
+    rol ENUM('Recepcionista', 'Administrador')
 );
 
--- CLIENTES
-CREATE TABLE cliente (
-    id_cliente SERIAL PRIMARY KEY,
-    nombre VARCHAR(100),
-    dni VARCHAR(20) UNIQUE,
-    telefono VARCHAR(20),
-    email VARCHAR(100)
-);
-
--- HABITACIONES
 CREATE TABLE habitacion (
-    id_habitacion SERIAL PRIMARY KEY,
+    id_habitacion INT AUTO_INCREMENT PRIMARY KEY,
     numero INT UNIQUE NOT NULL,
-    tipo VARCHAR(20) CHECK (tipo IN ('Simple', 'Lujo')),
+    tipo ENUM('Simple', 'Lujo'),
     precio_base DECIMAL(10,2) NOT NULL,
-    estado VARCHAR(20) CHECK (estado IN ('Disponible', 'Ocupada', 'Mantenimiento'))
+    estado ENUM('Disponible', 'Ocupada', 'Mantenimiento')
 );
 
--- SERVICIOS EXTRAS (Decorador)
 CREATE TABLE decoracion_habitacion (
-    id_decoracion SERIAL PRIMARY KEY,
-    id_habitacion INT REFERENCES habitacion(id_habitacion) ON DELETE CASCADE,
+    id_decoracion INT AUTO_INCREMENT PRIMARY KEY,
+    id_habitacion INT,
     servicio_extra VARCHAR(50),
-    costo_adicional DECIMAL(10,2)
+    costo_adicional DECIMAL(10,2),
+    FOREIGN KEY (id_habitacion) REFERENCES habitacion(id_habitacion) ON DELETE CASCADE
 );
 
--- RESERVAS
 CREATE TABLE reserva (
-    id_reserva SERIAL PRIMARY KEY,
-    id_cliente INT REFERENCES cliente(id_cliente),
-    id_habitacion INT REFERENCES habitacion(id_habitacion),
+    id_reserva INT AUTO_INCREMENT PRIMARY KEY,
+    id_cliente INT,
+    id_habitacion INT,
     fecha_ingreso DATE,
     fecha_salida DATE,
-    estado VARCHAR(20) CHECK (estado IN ('Activa', 'Finalizada', 'Cancelada')),
-    total_calculado DECIMAL(10,2)
+    estado ENUM('Activa', 'Finalizada', 'Cancelada'),
+    total_calculado DECIMAL(10,2),
+    FOREIGN KEY (id_cliente) REFERENCES cliente(id),
+    FOREIGN KEY (id_habitacion) REFERENCES habitacion(id_habitacion)
 );
 
--- HISTORIAL DE RESERVA (Memento)
 CREATE TABLE reserva_historial (
-    id_historial SERIAL PRIMARY KEY,
-    id_reserva INT REFERENCES reserva(id_reserva),
+    id_historial INT AUTO_INCREMENT PRIMARY KEY,
+    id_reserva INT,
     fecha_modificacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    estado_anterior VARCHAR(20),
-    total_anterior DECIMAL(10,2)
+    estado_anterior ENUM('Activa', 'Finalizada', 'Cancelada'),
+    total_anterior DECIMAL(10,2),
+    FOREIGN KEY (id_reserva) REFERENCES reserva(id_reserva)
 );
 
--- PAGOS
 CREATE TABLE pago (
-    id_pago SERIAL PRIMARY KEY,
-    id_reserva INT REFERENCES reserva(id_reserva),
+    id_pago INT AUTO_INCREMENT PRIMARY KEY,
+    id_reserva INT,
     metodo_pago VARCHAR(30),
     monto_pagado DECIMAL(10,2),
-    fecha_pago DATE
+    fecha_pago DATE,
+    FOREIGN KEY (id_reserva) REFERENCES reserva(id_reserva)
 );
 
--- NOTIFICACIONES (Observer)
 CREATE TABLE notificacion (
-    id_notificacion SERIAL PRIMARY KEY,
+    id_notificacion INT AUTO_INCREMENT PRIMARY KEY,
     mensaje TEXT,
-    tipo VARCHAR(30) CHECK (tipo IN ('Correo', 'Aplicacion')),
+    tipo ENUM('Correo', 'Aplicacion'),
     fecha_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    id_usuario INT REFERENCES usuario(id_usuario)
+    id_usuario INT,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
 
--- LOG DE ACTIVIDAD (Observer / Auditoría)
 CREATE TABLE log_actividad (
-    id_log SERIAL PRIMARY KEY,
-    id_usuario INT REFERENCES usuario(id_usuario),
+    id_log INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT,
     accion_realizada TEXT,
     tabla_afectada VARCHAR(50),
-    fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    fecha_hora TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES usuario(id_usuario)
 );
 
 -- Vista de habitaciones disponibles
@@ -88,20 +90,10 @@ SELECT id_habitacion, numero, tipo, precio_base
 FROM habitacion
 WHERE estado = 'Disponible';
 
--- Vista de reservas activas con datos de cliente
+-- Vista de reservas activas
 CREATE VIEW vista_reservas_activas AS
 SELECT r.id_reserva, c.nombre AS cliente, h.numero AS habitacion, r.fecha_ingreso, r.fecha_salida
 FROM reserva r
-JOIN cliente c ON r.id_cliente = c.id_cliente
+JOIN cliente c ON r.id_cliente = c.id
 JOIN habitacion h ON r.id_habitacion = h.id_habitacion
 WHERE r.estado = 'Activa';
-
--- Total de ingresos por reservas finalizadas
-SELECT SUM(total_calculado) AS total_ingresos
-FROM reserva
-WHERE estado = 'Finalizada';
-
--- Historial de cambios en una reserva específica
-SELECT * FROM reserva_historial
-WHERE id_reserva = 1
-ORDER BY fecha_modificacion DESC;
