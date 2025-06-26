@@ -4,8 +4,12 @@ import java.util.List;
 
 public class ClienteService {
 
-    private ClienteDAO dao = new ClienteDAO();
+    private ClienteDAO dao;
 
+    public ClienteService(ClienteDAO dao) {
+        this.dao = dao;
+    }
+    
     public void registrarCliente(Cliente cliente) {
         // Validación básica
         if (cliente.getNombre().isBlank() || cliente.getDocumento().isBlank()) {

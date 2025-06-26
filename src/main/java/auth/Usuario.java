@@ -2,23 +2,26 @@ package auth;
 
 public class Usuario {
     private int id;
-    private String username;
-    private String password;
-    private String rol; // ej: admin, recepcionista
+    private String nombre;
+    private String correo;
+    private String contrasena;
+    private String rol;
 
-    public Usuario(int id, String username, String password, String rol) {
+    public Usuario(int id, String nombre, String correo, String contrasena, String rol) {
         this.id = id;
-        this.username = username;
-        this.password = password;
+        this.nombre = nombre;
+        this.correo = correo;
+        this.contrasena = contrasena;
         this.rol = rol;
     }
 
-    public Usuario(String username, String password) {
-        this(0, username, password, null);
+    public Usuario(String correo, String contrasena) {
+        this(0, null, correo, contrasena, null);
     }
 
     public int getId() { return id; }
-    public String getUsername() { return username; }
-    public String getPassword() { return password; }
+    public String getNombre() { return nombre; }
+    public String getCorreo() { return correo; }
+    public String getContrasena() { return contrasena; }
     public String getRol() { return rol; }
 }

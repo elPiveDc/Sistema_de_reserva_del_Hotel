@@ -2,16 +2,24 @@ package auth;
 
 public class LoginService {
 
-    private UsuarioDAO usuarioDAO = new UsuarioDAO();
+    private UsuarioDAO usuarioDAO;
 
-    public Usuario login(String username, String password) throws Exception {
-        Usuario u = usuarioDAO.buscarPorUsername(username);
+    public LoginService() {
+        this.usuarioDAO = new UsuarioDAO();
+    }
+
+    public LoginService(UsuarioDAO dao) {
+        this.usuarioDAO = dao;
+    }
+
+    public Usuario login(String correo, String contrasena) throws Exception {
+        Usuario u = usuarioDAO.buscarPorCorreo(correo);
 
         if (u == null) {
             throw new Exception("Usuario no encontrado.");
         }
 
-        if (!u.getPassword().equals(password)) {
+        if (!u.getContrasena().equals(contrasena)) {
             throw new Exception("Contraseña incorrecta.");
         }
 
