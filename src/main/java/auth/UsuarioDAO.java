@@ -1,6 +1,6 @@
 package auth;
 
-import bd.PgConexion;
+import bd.Conexion;
 import java.sql.*;
 
 public class UsuarioDAO {
@@ -8,7 +8,7 @@ public class UsuarioDAO {
     public Usuario buscarPorUsername(String username) {
         String sql = "SELECT * FROM usuarios WHERE username = ?";
 
-        try (PreparedStatement stmt = PgConexion.getInstancia().getConnection().prepareStatement(sql)) {
+        try (PreparedStatement stmt = Conexion.getInstancia().getConnection().prepareStatement(sql)) {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
 

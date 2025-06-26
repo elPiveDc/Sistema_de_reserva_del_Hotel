@@ -1,46 +1,43 @@
+
 package bd;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class PgConexion implements iconexionbd{
+public class Conexion implements iconexionbd {
 
-    // 1. Instancia única (Singleton)
-    private static PgConexion instancia;
-
-    // 2. Conexión privada
+    private static Conexion instancia;
     private Connection conexion;
 
-    // 3. Constructor privado
-    private PgConexion() {
+    private Conexion() {
         try {
-            Class.forName("org.postgresql.Driver");
+            // Cargar el driver de MySQL
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Usar las claves del archivo db.properties
             this.conexion = DriverManager.getConnection(
-                    DBConfig.get("postgres.url"),
-                    DBConfig.getUser(),
-                    DBConfig.getPasword()
+                DBConfig.get("db.url"),
+                DBConfig.getUser(),
+                DBConfig.getPassword()
             );
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // 4. Método estático para obtener la instancia única
-    public static PgConexion getInstancia() {
+    public static Conexion getInstancia() {
         if (instancia == null) {
-            instancia = new PgConexion(); // se crea una sola vez
+            instancia = new Conexion();
         }
         return instancia;
     }
 
-    // 5. Método para obtener la conexión
     @Override
     public Connection getConnection() {
         return conexion;
     }
 
-    // 6. Método opcional para cerrar la conexión si es necesario
     public void cerrarConexion() {
         try {
             if (conexion != null && !conexion.isClosed()) {
@@ -50,5 +47,4 @@ public class PgConexion implements iconexionbd{
             e.printStackTrace();
         }
     }
-
 }

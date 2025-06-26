@@ -1,6 +1,6 @@
 package cliente;
 
-import bd.PgConexion;
+import bd.Conexion;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ public class ClienteDAO {
     public void insertar(Cliente cliente) {
         String sql = "INSERT INTO clientes(nombre, apellido, documento, correo) VALUES (?, ?, ?, ?)";
 
-        try (PreparedStatement stmt = PgConexion.getInstancia().getConnection().prepareStatement(sql)) {
+        try (PreparedStatement stmt = Conexion.getInstancia().getConnection().prepareStatement(sql)) {
             stmt.setString(1, cliente.getNombre());
             stmt.setString(2, cliente.getApellido());
             stmt.setString(3, cliente.getDocumento());
@@ -25,7 +25,7 @@ public class ClienteDAO {
         List<Cliente> lista = new ArrayList<>();
         String sql = "SELECT * FROM clientes";
 
-        try (Statement stmt = PgConexion.getInstancia().getConnection().createStatement();
+        try (Statement stmt = Conexion.getInstancia().getConnection().createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
@@ -47,7 +47,7 @@ public class ClienteDAO {
 
     public Cliente buscarPorDocumento(String documento) {
         String sql = "SELECT * FROM clientes WHERE documento = ?";
-        try (PreparedStatement stmt = PgConexion.getInstancia().getConnection().prepareStatement(sql)) {
+        try (PreparedStatement stmt = Conexion.getInstancia().getConnection().prepareStatement(sql)) {
             stmt.setString(1, documento);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
