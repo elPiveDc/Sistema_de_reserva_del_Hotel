@@ -1,8 +1,16 @@
 package auth;
 
 public class LoginService {
+    private UsuarioDAO usuarioDAO;
 
-    private UsuarioDAO usuarioDAO = new UsuarioDAO();
+    public LoginService() {
+        this.usuarioDAO = new UsuarioDAO(); // por defecto
+    }
+
+    // Constructor para inyectar DAO personalizado (mock o real)
+    public LoginService(UsuarioDAO dao) {
+        this.usuarioDAO = dao;
+    }
 
     public Usuario login(String username, String password) throws Exception {
         Usuario u = usuarioDAO.buscarPorUsername(username);

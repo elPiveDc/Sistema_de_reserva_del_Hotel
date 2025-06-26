@@ -7,6 +7,10 @@ public class ReservaServiceImpl implements IReservaService {
 
     private ReservaDAO reservaDAO;
 
+    public ReservaServiceImpl(ReservaDAO reservaDAO) {
+        this.reservaDAO = reservaDAO;
+    }
+
     public ReservaServiceImpl() {
         this.reservaDAO = new ReservaDAO();
     }
