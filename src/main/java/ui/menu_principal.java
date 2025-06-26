@@ -12,7 +12,7 @@ public class menu_principal extends javax.swing.JFrame {
         this.usuario = usuario;
         initComponents();
         setLocationRelativeTo(null);
-        setTitle("Bienvenido " + usuario.getUsername() + " (" + usuario.getRol() + ")");
+        setTitle("Bienvenido " + usuario.getNombre()+ " (" + usuario.getRol() + ")");
     }
     
     public menu_principal() {

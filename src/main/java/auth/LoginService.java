@@ -1,25 +1,25 @@
 package auth;
 
 public class LoginService {
+
     private UsuarioDAO usuarioDAO;
 
     public LoginService() {
-        this.usuarioDAO = new UsuarioDAO(); // por defecto
+        this.usuarioDAO = new UsuarioDAO();
     }
 
-    // Constructor para inyectar DAO personalizado (mock o real)
     public LoginService(UsuarioDAO dao) {
         this.usuarioDAO = dao;
     }
 
-    public Usuario login(String username, String password) throws Exception {
-        Usuario u = usuarioDAO.buscarPorUsername(username);
+    public Usuario login(String correo, String contrasena) throws Exception {
+        Usuario u = usuarioDAO.buscarPorCorreo(correo);
 
         if (u == null) {
             throw new Exception("Usuario no encontrado.");
         }
 
-        if (!u.getPassword().equals(password)) {
+        if (!u.getContrasena().equals(contrasena)) {
             throw new Exception("Contraseña incorrecta.");
         }
 

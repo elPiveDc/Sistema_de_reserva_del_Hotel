@@ -14,7 +14,7 @@ public class ConDesayuno extends HabitacionDecorator {
     }
 
     @Override
-    public double getPrecio() {
-        return habitacion.getPrecio() + 10.0;
+    public double getPrecioFinal() {
+        return habitacion.getPrecioFinal() + 10.0;
     }
 }

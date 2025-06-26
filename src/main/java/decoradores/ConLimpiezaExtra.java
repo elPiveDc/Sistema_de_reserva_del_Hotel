@@ -14,7 +14,7 @@ public class ConLimpiezaExtra extends HabitacionDecorator {
     }
 
     @Override
-    public double getPrecio() {
-        return habitacion.getPrecio() + 5.0;
+    public double getPrecioFinal() {
+        return habitacion.getPrecioFinal() + 5.0;
     }
 }

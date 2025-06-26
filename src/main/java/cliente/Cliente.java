@@ -6,27 +6,25 @@ public class Cliente {
     private String apellido;
     private String documento;
     private String correo;
+    private String telefono;
 
-    // Constructor
-    public Cliente(int id, String nombre, String apellido, String documento, String correo) {
+    public Cliente(int id, String nombre, String apellido, String documento, String correo, String telefono) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.documento = documento;
         this.correo = correo;
+        this.telefono = telefono;
     }
 
-    // Constructor sin ID (para insertar)
-    public Cliente(String nombre, String apellido, String documento, String correo) {
-        this(0, nombre, apellido, documento, correo);
+    public Cliente(String nombre, String apellido, String documento, String correo, String telefono) {
+        this(0, nombre, apellido, documento, correo, telefono);
     }
 
-    // Getters y Setters
     public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
-
     public String getNombre() { return nombre; }
     public String getApellido() { return apellido; }
     public String getDocumento() { return documento; }
     public String getCorreo() { return correo; }
+    public String getTelefono() { return telefono; }
 }

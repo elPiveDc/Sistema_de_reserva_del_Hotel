@@ -7,7 +7,7 @@ public abstract class HabitacionDecorator extends Habitacion {
     protected Habitacion habitacion;
 
     public HabitacionDecorator(Habitacion habitacion) {
-        super(habitacion.getNumero(), habitacion.getPrecio());
+        super(habitacion.getId(), habitacion.getNumero(), habitacion.getTipo(), habitacion.getPrecioBase(), habitacion.getEstado());
         this.habitacion = habitacion;
     }
 
@@ -15,7 +15,5 @@ public abstract class HabitacionDecorator extends Habitacion {
     public abstract String getDescripcion();
 
     @Override
-    public double getPrecio() {
-        return habitacion.getPrecio();
-    }
+    public abstract double getPrecioFinal();
 }
